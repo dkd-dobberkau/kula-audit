@@ -12,7 +12,7 @@ Audit your TYPO3 installation directly from the backend: upgrade readiness, know
 
 - TYPO3 12.4 or 13.x
 - PHP 8.1+
-- Access to a running Kula instance (default: `https://kula.dkd.de/api/audit`)
+- Access to a running Kula instance (default: `https://app.kula-audit.de/api/audit`)
 
 ## Installation
 
@@ -32,7 +32,7 @@ Set the API URL and target TYPO3 version in `config/system/settings.php` or via 
 
 ```php
 $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['kula_audit'] = [
-    'apiUrl' => 'https://kula.dkd.de/api/audit',
+    'apiUrl' => 'https://app.kula-audit.de/api/audit',
     'targetMajor' => 13,
 ];
 ```

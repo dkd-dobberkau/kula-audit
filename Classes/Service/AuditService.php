@@ -17,7 +17,7 @@ class AuditService
     private const REGISTRY_NAMESPACE = 'tx_kulaaudit';
     private const RESULT_KEY = 'latest_result';
     private const TTL_SECONDS = 86400; // 24 hours
-    private const DEFAULT_API_URL = 'https://kula.dkd.de/api/audit';
+    private const DEFAULT_API_URL = 'https://app.kula-audit.de/api/audit';
     private const DEFAULT_TARGET = 13;
 
     public function __construct(
