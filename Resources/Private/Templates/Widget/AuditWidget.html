@@ -1,0 +1,71 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<div class="widget-kula-audit">
+    <f:if condition="{hasData}">
+        <f:then>
+            <!-- Traffic light indicator -->
+            <div class="text-center mb-3">
+                <f:switch expression="{status}">
+                    <f:case value="green">
+                        <span class="badge bg-success fs-5 px-3 py-2">Ready</span>
+                    </f:case>
+                    <f:case value="yellow">
+                        <span class="badge bg-warning text-dark fs-5 px-3 py-2">Attention</span>
+                    </f:case>
+                    <f:case value="red">
+                        <span class="badge bg-danger fs-5 px-3 py-2">Action needed</span>
+                    </f:case>
+                    <f:defaultCase>
+                        <span class="badge bg-secondary fs-5 px-3 py-2">No data</span>
+                    </f:defaultCase>
+                </f:switch>
+            </div>
+
+            <!-- Stats -->
+            <div class="d-flex justify-content-around text-center mb-2">
+                <div>
+                    <div class="fw-bold text-success">{report.upgrade.green}</div>
+                    <small class="text-body-secondary">ready</small>
+                </div>
+                <f:if condition="{report.upgrade.yellow}">
+                    <div>
+                        <div class="fw-bold text-warning">{report.upgrade.yellow}</div>
+                        <small class="text-body-secondary">pre-release</small>
+                    </div>
+                </f:if>
+                <f:if condition="{report.upgrade.red}">
+                    <div>
+                        <div class="fw-bold text-danger">{report.upgrade.red}</div>
+                        <small class="text-body-secondary">blocked</small>
+                    </div>
+                </f:if>
+                <div>
+                    <f:if condition="{report.security.total_vulns}">
+                        <f:then>
+                            <div class="fw-bold text-danger">{report.security.total_vulns}</div>
+                        </f:then>
+                        <f:else>
+                            <div class="fw-bold text-success">0</div>
+                        </f:else>
+                    </f:if>
+                    <small class="text-body-secondary">vulns</small>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <small class="text-body-secondary">
+                    TYPO3 v{report.target_major} | {report.packages_total} packages
+                </small>
+            </div>
+        </f:then>
+        <f:else>
+            <div class="text-center text-body-secondary py-3">
+                <p>No audit data yet.</p>
+                <p><small>Run <code>vendor/bin/typo3 kula:audit</code></small></p>
+            </div>
+        </f:else>
+    </f:if>
+</div>
+
+</html>

@@ -1,0 +1,188 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<div class="kula-audit-module">
+
+    <div class="row mb-4">
+        <div class="col">
+            <h1>Kula Audit</h1>
+            <p class="text-body-secondary">
+                TYPO3 extension upgrade readiness, vulnerabilities, and SBOM — powered by the Kula API.
+            </p>
+        </div>
+        <div class="col-auto">
+            <form action="{runAuditUrl}" method="post">
+                <button type="submit" class="btn btn-primary">
+                    Run Audit Now
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <f:if condition="{cachedAt}">
+        <div class="callout callout-info mb-4">
+            Last check: <f:format.date format="d.m.Y H:i">{cachedAt}</f:format.date>
+        </div>
+    </f:if>
+
+    <f:if condition="{error}">
+        <div class="callout callout-danger mb-4">
+            <strong>Error:</strong> {error}
+        </div>
+    </f:if>
+
+    <f:if condition="{hasData}">
+        <f:then>
+
+            <!-- Summary cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <div class="display-6">{report.packages_total}</div>
+                            <div class="text-body-secondary">Packages</div>
+                        </div>
+                    </div>
+                </div>
+                <f:if condition="{report.upgrade.packages}">
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <div class="display-6 text-success">{report.upgrade.green}</div>
+                                <div class="text-body-secondary">Ready</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <div class="display-6 text-danger">{report.upgrade.red}</div>
+                                <div class="text-body-secondary">Blocked</div>
+                            </div>
+                        </div>
+                    </div>
+                </f:if>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <f:if condition="{report.security.total_vulns}">
+                                <f:then>
+                                    <div class="display-6 text-danger">{report.security.total_vulns}</div>
+                                </f:then>
+                                <f:else>
+                                    <div class="display-6 text-success">0</div>
+                                </f:else>
+                            </f:if>
+                            <div class="text-body-secondary">Vulnerabilities</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upgrade Readiness table -->
+            <f:if condition="{report.upgrade.packages}">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h2 class="card-title">Upgrade Readiness — TYPO3 v{report.target_major}</h2>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Package</th>
+                                    <th>Current</th>
+                                    <th>Upgrade</th>
+                                    <th>Constraint</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <f:for each="{report.upgrade.packages}" as="pkg">
+                                    <tr>
+                                        <td>
+                                            <f:switch expression="{pkg.upgrade_status}">
+                                                <f:case value="green">
+                                                    <span class="badge bg-success">ready</span>
+                                                </f:case>
+                                                <f:case value="yellow">
+                                                    <span class="badge bg-warning text-dark">pre-release</span>
+                                                </f:case>
+                                                <f:case value="red">
+                                                    <span class="badge bg-danger">blocked</span>
+                                                </f:case>
+                                                <f:defaultCase>
+                                                    <span class="badge bg-secondary">unknown</span>
+                                                </f:defaultCase>
+                                            </f:switch>
+                                        </td>
+                                        <td>{pkg.name}</td>
+                                        <td>{pkg.version}</td>
+                                        <td>{pkg.upgrade_version}</td>
+                                        <td><code>{pkg.upgrade_constraint}</code></td>
+                                        <td class="text-body-secondary">{pkg.type}</td>
+                                    </tr>
+                                </f:for>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </f:if>
+
+            <!-- Vulnerabilities table -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2 class="card-title">Vulnerabilities</h2>
+                </div>
+                <f:if condition="{report.security.packages}">
+                    <f:then>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Package</th>
+                                        <th>Version</th>
+                                        <th>ID</th>
+                                        <th>Summary</th>
+                                        <th>Severity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <f:for each="{report.security.packages}" as="pkg">
+                                        <f:for each="{pkg.vulns}" as="vuln">
+                                            <tr>
+                                                <td>{pkg.name}</td>
+                                                <td>{pkg.version}</td>
+                                                <td><code>{vuln.id}</code></td>
+                                                <td>{vuln.summary}</td>
+                                                <td>
+                                                    <span class="badge bg-danger">{vuln.severity}</span>
+                                                </td>
+                                            </tr>
+                                        </f:for>
+                                    </f:for>
+                                </tbody>
+                            </table>
+                        </div>
+                    </f:then>
+                    <f:else>
+                        <div class="card-body">
+                            <p class="text-success mb-0">No known vulnerabilities found.</p>
+                        </div>
+                    </f:else>
+                </f:if>
+            </div>
+
+        </f:then>
+        <f:else>
+            <f:if condition="!{error}">
+                <div class="callout callout-warning">
+                    No audit data available yet. Click <strong>Run Audit Now</strong> to check your installation.
+                </div>
+            </f:if>
+        </f:else>
+    </f:if>
+
+</div>
+
+</html>

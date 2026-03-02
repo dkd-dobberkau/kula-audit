@@ -1,0 +1,19 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  dashboard.widget.kula_audit:
+    class: 'Dkd\KulaAudit\Widgets\AuditWidget'
+    arguments:
+      $view: '@dashboard.views.widget'
+    tags:
+      - name: dashboard.widget
+        identifier: 'kulaAudit'
+        groupNames: 'systemInfo'
+        title: 'LLL:EXT:kula_audit/Resources/Private/Language/locallang.xlf:widget.title'
+        description: 'LLL:EXT:kula_audit/Resources/Private/Language/locallang.xlf:widget.description'
+        iconIdentifier: 'module-kula-audit'
+        height: 'medium'
+        width: 'small'

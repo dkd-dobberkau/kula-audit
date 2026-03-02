@@ -1,0 +1,32 @@
+{
+    "name": "dkd/kula-audit",
+    "type": "typo3-cms-extension",
+    "description": "TYPO3 extension audit: upgrade readiness, vulnerabilities, and SBOM via Kula API",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "dkd Internet Service GmbH",
+            "email": "info@dkd.de",
+            "homepage": "https://www.dkd.de"
+        }
+    ],
+    "keywords": ["typo3", "audit", "upgrade", "security", "sbom"],
+    "require": {
+        "php": "^8.1",
+        "typo3/cms-core": "^12.4 || ^13.0",
+        "typo3/cms-backend": "^12.4 || ^13.0"
+    },
+    "suggest": {
+        "typo3/cms-dashboard": "Required for the Dashboard widget"
+    },
+    "autoload": {
+        "psr-4": {
+            "Dkd\\KulaAudit\\": "Classes/"
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "kula_audit"
+        }
+    }
+}

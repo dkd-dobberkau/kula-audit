@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="messages" date="2026-03-01T00:00:00Z" product-name="kula_audit">
+        <header/>
+        <body>
+            <!-- Backend module -->
+            <trans-unit id="module.title" resname="module.title">
+                <source>Kula Audit</source>
+            </trans-unit>
+            <trans-unit id="module.description" resname="module.description">
+                <source>TYPO3 extension audit: upgrade readiness, vulnerabilities, and SBOM</source>
+            </trans-unit>
+
+            <!-- Dashboard widget -->
+            <trans-unit id="widget.title" resname="widget.title">
+                <source>Extension Audit</source>
+            </trans-unit>
+            <trans-unit id="widget.description" resname="widget.description">
+                <source>Shows upgrade readiness and vulnerability status for installed TYPO3 extensions</source>
+            </trans-unit>
+
+            <!-- Status labels -->
+            <trans-unit id="status.ready" resname="status.ready">
+                <source>Ready</source>
+            </trans-unit>
+            <trans-unit id="status.prerelease" resname="status.prerelease">
+                <source>Pre-release</source>
+            </trans-unit>
+            <trans-unit id="status.blocked" resname="status.blocked">
+                <source>Blocked</source>
+            </trans-unit>
+            <trans-unit id="status.unknown" resname="status.unknown">
+                <source>Unknown</source>
+            </trans-unit>
+
+            <!-- Actions -->
+            <trans-unit id="action.runAudit" resname="action.runAudit">
+                <source>Run Audit Now</source>
+            </trans-unit>
+            <trans-unit id="action.lastCheck" resname="action.lastCheck">
+                <source>Last check</source>
+            </trans-unit>
+
+            <!-- Messages -->
+            <trans-unit id="message.noData" resname="message.noData">
+                <source>No audit data available yet. Run the audit to check your installation.</source>
+            </trans-unit>
+            <trans-unit id="message.noVulns" resname="message.noVulns">
+                <source>No known vulnerabilities found.</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

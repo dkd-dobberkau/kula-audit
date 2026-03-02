@@ -1,0 +1,16 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Dkd\KulaAudit\:
+    resource: '../Classes/*'
+    exclude:
+      - '../Classes/Widgets/*'
+
+  Dkd\KulaAudit\Service\AuditService:
+    public: true
+
+imports:
+  - { resource: Backend/DashboardWidgets.yaml }
