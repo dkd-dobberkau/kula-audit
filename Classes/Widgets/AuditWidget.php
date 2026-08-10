@@ -29,11 +29,18 @@ class AuditWidget implements WidgetInterface
             $upgrade = $report['upgrade'] ?? [];
             $vulns = $report['security']['total_vulns'] ?? 0;
             $red = $upgrade['red'] ?? 0;
+            $scanOk = (bool)($report['security']['scan_ok'] ?? true);
 
             if ($red === 0 && $vulns === 0) {
                 $status = 'green';
             } elseif ($red > 0 || $vulns > 0) {
                 $status = ($red > 3 || $vulns > 3) ? 'red' : 'yellow';
+            }
+
+            // A failed scan means the security state is unknown, so the zero
+            // vulnerability count it produces must never light up green.
+            if (!$scanOk && $status === 'green') {
+                $status = 'yellow';
             }
         }
 

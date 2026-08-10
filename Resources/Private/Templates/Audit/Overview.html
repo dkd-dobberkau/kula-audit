@@ -40,7 +40,9 @@
                     <div class="card">
                         <div class="card-body text-center">
                             <div class="display-6">{report.packages_total}</div>
-                            <div class="text-body-secondary">Packages</div>
+                            <div class="text-body-secondary">
+                                Packages<f:if condition="{report.packages_dev}"> ({report.packages_dev} dev)</f:if>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -65,15 +67,23 @@
                 <div class="col-md-3">
                     <div class="card">
                         <div class="card-body text-center">
-                            <f:if condition="{report.security.total_vulns}">
+                            <f:if condition="{report.security.scan_ok}">
                                 <f:then>
-                                    <div class="display-6 text-danger">{report.security.total_vulns}</div>
+                                    <f:if condition="{report.security.total_vulns}">
+                                        <f:then>
+                                            <div class="display-6 text-danger">{report.security.total_vulns}</div>
+                                        </f:then>
+                                        <f:else>
+                                            <div class="display-6 text-success">0</div>
+                                        </f:else>
+                                    </f:if>
+                                    <div class="text-body-secondary">Vulnerabilities</div>
                                 </f:then>
                                 <f:else>
-                                    <div class="display-6 text-success">0</div>
+                                    <div class="display-6 text-body-secondary">?</div>
+                                    <div class="text-warning">Scan failed</div>
                                 </f:else>
                             </f:if>
-                            <div class="text-body-secondary">Vulnerabilities</div>
                         </div>
                     </div>
                 </div>
@@ -116,7 +126,12 @@
                                                 </f:defaultCase>
                                             </f:switch>
                                         </td>
-                                        <td>{pkg.name}</td>
+                                        <td>
+                                            {pkg.name}
+                                            <f:if condition="{pkg.dev}">
+                                                <span class="badge bg-secondary">dev</span>
+                                            </f:if>
+                                        </td>
                                         <td>{pkg.version}</td>
                                         <td>{pkg.upgrade_version}</td>
                                         <td><code>{pkg.upgrade_constraint}</code></td>
@@ -151,7 +166,12 @@
                                     <f:for each="{report.security.packages}" as="pkg">
                                         <f:for each="{pkg.vulns}" as="vuln">
                                             <tr>
-                                                <td>{pkg.name}</td>
+                                                <td>
+                                                    {pkg.name}
+                                                    <f:if condition="{pkg.dev}">
+                                                        <span class="badge bg-secondary">dev</span>
+                                                    </f:if>
+                                                </td>
                                                 <td>{pkg.version}</td>
                                                 <td><code>{vuln.id}</code></td>
                                                 <td>{vuln.summary}</td>
@@ -167,7 +187,20 @@
                     </f:then>
                     <f:else>
                         <div class="card-body">
-                            <p class="text-success mb-0">No known vulnerabilities found.</p>
+                            <f:if condition="{report.security.scan_ok}">
+                                <f:then>
+                                    <p class="text-success mb-0">No known vulnerabilities found.</p>
+                                </f:then>
+                                <f:else>
+                                    <p class="text-danger mb-1">
+                                        <strong>Vulnerability scan failed — this is not an all-clear.</strong>
+                                    </p>
+                                    <p class="text-body-secondary mb-0">
+                                        <f:format.htmlspecialchars>{report.security.scan_error}</f:format.htmlspecialchars><br>
+                                        No package was checked against OSV. Please re-run the audit.
+                                    </p>
+                                </f:else>
+                            </f:if>
                         </div>
                     </f:else>
                 </f:if>

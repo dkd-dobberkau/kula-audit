@@ -59,7 +59,30 @@ class AuditService
      */
     public function getLatestResult(): array
     {
-        return $this->registry->get(self::REGISTRY_NAMESPACE, self::RESULT_KEY, []);
+        return $this->normalizeReport(
+            $this->registry->get(self::REGISTRY_NAMESPACE, self::RESULT_KEY, [])
+        );
+    }
+
+    /**
+     * Guarantee a definite security scan status.
+     *
+     * The Kula API only started reporting `scan_ok` after the OSV scan learned
+     * to fail loudly. Reports from an older API — or cached before this
+     * extension was updated — omit the key; those ran under the old behaviour,
+     * so absence means "scanned". Only an explicit false marks a failed scan,
+     * where zero vulnerabilities must never be shown as an all-clear.
+     */
+    private function normalizeReport(array $report): array
+    {
+        if ($report === [] || isset($report['error'])) {
+            return $report;
+        }
+
+        $report['security']['scan_ok'] = (bool)($report['security']['scan_ok'] ?? true);
+        $report['security']['scan_error'] = (string)($report['security']['scan_error'] ?? '');
+
+        return $report;
     }
 
     /**
@@ -122,7 +145,7 @@ class AuditService
                 return ['error' => 'Invalid API response'];
             }
 
-            return $data;
+            return $this->normalizeReport($data);
         } catch (\Throwable $e) {
             return ['error' => 'API request failed: ' . $e->getMessage()];
         }

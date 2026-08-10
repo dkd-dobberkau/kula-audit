@@ -52,6 +52,12 @@ vendor/bin/typo3 kula:audit --force
 vendor/bin/typo3 kula:audit --json
 ```
 
+**Exit codes:** `0` when the audit completed — including when vulnerabilities were
+found, which is a finding, not a command failure. `1` when the audit could not be
+completed: no `composer.lock`, an unreachable Kula API, or a failed vulnerability
+scan (`security.scan_ok: false`). A failed scan reports zero vulnerabilities, so CI
+must treat it as an error rather than an all-clear.
+
 ### Scheduler
 
 The `kula:audit` command is schedulable via the TYPO3 Scheduler. Recommended frequency: once daily.

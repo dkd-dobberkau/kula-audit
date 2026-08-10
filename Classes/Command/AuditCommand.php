@@ -52,7 +52,11 @@ class AuditCommand extends Command
         }
 
         $this->renderReport($io, $report);
-        return Command::SUCCESS;
+
+        // An incomplete audit is a failed run — CI must not read it as a pass.
+        $scanOk = (bool)($report['security']['scan_ok'] ?? true);
+
+        return $scanOk ? Command::SUCCESS : Command::FAILURE;
     }
 
     private function renderReport(SymfonyStyle $io, array $report): void
@@ -89,7 +93,12 @@ class AuditCommand extends Command
         // Vulnerabilities
         $security = $report['security'] ?? [];
         $totalVulns = $security['total_vulns'] ?? 0;
-        if ($totalVulns > 0) {
+        if (!($security['scan_ok'] ?? true)) {
+            $io->warning(sprintf(
+                "Vulnerability scan failed — this is NOT an all-clear.\n%s\nNo package was checked against OSV.",
+                $security['scan_error'] ?? 'Unknown error',
+            ));
+        } elseif ($totalVulns > 0) {
             $io->warning(sprintf('%d vulnerabilities found', $totalVulns));
             $rows = [];
             foreach ($security['packages'] ?? [] as $pkg) {
