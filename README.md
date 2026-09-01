@@ -1,6 +1,6 @@
 # EXT:kula_audit — TYPO3 Extension Audit
 
-Audit your TYPO3 installation directly from the backend: upgrade readiness, known vulnerabilities, and CycloneDX SBOM — powered by the [Kula](https://github.com/dkd/kula-graph) API.
+Audit your TYPO3 installation directly from the backend: upgrade readiness, known vulnerabilities, and CycloneDX SBOM — powered by the [Kula](https://www.kula-audit.de) API.
 
 ## Features
 
